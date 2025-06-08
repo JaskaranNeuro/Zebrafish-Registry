@@ -1,0 +1,17 @@
+// Update firebase.json to remove functions
+{
+    "hosting": {
+      "public": "zebrafish-frontend/build",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
+      "rewrites": [
+        {
+          "source": "**",
+          "destination": "/index.html"
+        }
+      ]
+    }
+  }

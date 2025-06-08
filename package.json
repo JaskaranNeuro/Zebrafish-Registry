@@ -1,0 +1,18 @@
+{
+  "dependencies": {
+    "@mui/icons-material": "^5.15.11",
+    "@mui/material": "^5.15.11",
+    "@stripe/react-stripe-js": "^3.3.0",
+    "@stripe/stripe-js": "^5.8.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "stripe": "^17.7.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "test:debug": "react-scripts test --runInBand --no-cache --watchAll=false"
+  }
+}

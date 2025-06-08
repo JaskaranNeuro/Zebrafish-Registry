@@ -1,0 +1,102 @@
+[debug] [2025-04-26T17:32:31.469Z] ----------------------------------------------------------------------
+[debug] [2025-04-26T17:32:31.472Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\Jaskaran Singh\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js init
+[debug] [2025-04-26T17:32:31.472Z] CLI Version:   14.2.1
+[debug] [2025-04-26T17:32:31.472Z] Platform:      win32
+[debug] [2025-04-26T17:32:31.472Z] Node Version:  v22.14.0
+[debug] [2025-04-26T17:32:31.472Z] Time:          Sat Apr 26 2025 13:32:31 GMT-0400 (Eastern Daylight Saving Time)
+[debug] [2025-04-26T17:32:31.473Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-04-26T17:32:31.644Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-04-26T17:32:31.645Z] > authorizing via signed-in user (jovenjjjoven@gmail.com)
+[info] 
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  D:\Zebrafish registry VS code
+
+Before we get started, keep in mind:
+
+  * You are initializing within an existing Firebase project directory
+
+[info] 
+=== Project Setup
+[info] 
+[info] First, let's associate this project directory with a Firebase project.
+[info] You can create multiple project aliases by running firebase use --add, 
+[info] but for now we'll just set up a default project.
+[info] 
+[debug] [2025-04-26T17:33:02.654Z] Checked if tokens are valid: false, expires at: 1745686836943
+[debug] [2025-04-26T17:33:02.654Z] Checked if tokens are valid: false, expires at: 1745686836943
+[debug] [2025-04-26T17:33:02.655Z] > refreshing access token with scopes: []
+[debug] [2025-04-26T17:33:02.656Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-04-26T17:33:02.656Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-04-26T17:33:02.857Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-04-26T17:33:02.857Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-04-26T17:33:02.863Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects pageSize=100
+[debug] [2025-04-26T17:33:03.311Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects 200
+[debug] [2025-04-26T17:33:03.311Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects [omitted]
+[info] i  Using project zebrafish-registry (Zebrafish Registry) 
+[info] 
+=== Functions Setup
+[debug] [2025-04-26T17:33:04.646Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-04-26T17:33:04.646Z] > authorizing via signed-in user (jovenjjjoven@gmail.com)
+[debug] [2025-04-26T17:33:04.646Z] [iam] checking project zebrafish-registry for permissions ["firebase.projects.get"]
+[debug] [2025-04-26T17:33:04.646Z] Checked if tokens are valid: true, expires at: 1745692381857
+[debug] [2025-04-26T17:33:04.646Z] Checked if tokens are valid: true, expires at: 1745692381857
+[debug] [2025-04-26T17:33:04.646Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/zebrafish-registry:testIamPermissions [none]
+[debug] [2025-04-26T17:33:04.646Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/zebrafish-registry:testIamPermissions x-goog-quota-user=projects/zebrafish-registry
+[debug] [2025-04-26T17:33:04.646Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/zebrafish-registry:testIamPermissions {"permissions":["firebase.projects.get"]}
+[debug] [2025-04-26T17:33:04.931Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/zebrafish-registry:testIamPermissions 200
+[debug] [2025-04-26T17:33:04.931Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/zebrafish-registry:testIamPermissions {"permissions":["firebase.projects.get"]}
+[debug] [2025-04-26T17:33:04.931Z] Checked if tokens are valid: true, expires at: 1745692381857
+[debug] [2025-04-26T17:33:04.931Z] Checked if tokens are valid: true, expires at: 1745692381857
+[debug] [2025-04-26T17:33:04.932Z] Checked if tokens are valid: true, expires at: 1745692381857
+[debug] [2025-04-26T17:33:04.932Z] Checked if tokens are valid: true, expires at: 1745692381857
+[debug] [2025-04-26T17:33:04.932Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/zebrafish-registry/services/cloudfunctions.googleapis.com [none]
+[debug] [2025-04-26T17:33:04.932Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/zebrafish-registry/services/cloudfunctions.googleapis.com x-goog-quota-user=projects/zebrafish-registry
+[debug] [2025-04-26T17:33:04.932Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/zebrafish-registry/services/runtimeconfig.googleapis.com [none]
+[debug] [2025-04-26T17:33:04.932Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/zebrafish-registry/services/runtimeconfig.googleapis.com x-goog-quota-user=projects/zebrafish-registry
+[debug] [2025-04-26T17:33:05.445Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/zebrafish-registry/services/runtimeconfig.googleapis.com 200
+[debug] [2025-04-26T17:33:05.445Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/zebrafish-registry/services/runtimeconfig.googleapis.com [omitted]
+[debug] [2025-04-26T17:33:05.452Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/zebrafish-registry/services/cloudfunctions.googleapis.com 200
+[debug] [2025-04-26T17:33:05.452Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/zebrafish-registry/services/cloudfunctions.googleapis.com [omitted]
+[debug] [2025-04-26T17:33:05.453Z] Checked if tokens are valid: true, expires at: 1745692381857
+[debug] [2025-04-26T17:33:05.453Z] Checked if tokens are valid: true, expires at: 1745692381857
+[debug] [2025-04-26T17:33:05.453Z] >>> [apiv2][query] POST https://serviceusage.googleapis.com/v1/projects/zebrafish-registry/services/cloudfunctions.googleapis.com:enable [none]
+[debug] [2025-04-26T17:33:05.453Z] >>> [apiv2][(partial)header] POST https://serviceusage.googleapis.com/v1/projects/zebrafish-registry/services/cloudfunctions.googleapis.com:enable x-goog-quota-user=projects/zebrafish-registry
+[debug] [2025-04-26T17:33:06.164Z] <<< [apiv2][status] POST https://serviceusage.googleapis.com/v1/projects/zebrafish-registry/services/cloudfunctions.googleapis.com:enable 200
+[debug] [2025-04-26T17:33:06.164Z] <<< [apiv2][body] POST https://serviceusage.googleapis.com/v1/projects/zebrafish-registry/services/cloudfunctions.googleapis.com:enable [omitted]
+[debug] [2025-04-26T17:33:16.171Z] Checked if tokens are valid: true, expires at: 1745692381857
+[debug] [2025-04-26T17:33:16.171Z] Checked if tokens are valid: true, expires at: 1745692381857
+[debug] [2025-04-26T17:33:16.171Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/zebrafish-registry/services/cloudfunctions.googleapis.com [none]
+[debug] [2025-04-26T17:33:16.171Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/zebrafish-registry/services/cloudfunctions.googleapis.com x-goog-quota-user=projects/zebrafish-registry
+[debug] [2025-04-26T17:33:16.615Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/zebrafish-registry/services/cloudfunctions.googleapis.com 200
+[debug] [2025-04-26T17:33:16.615Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/zebrafish-registry/services/cloudfunctions.googleapis.com [omitted]
+[info] 
+Detected existing codebase(s): default
+
+[info] Let's create a new codebase for your functions.
+[info] A directory corresponding to the codebase will be created in your project
+[info] with sample code pre-configured.
+
+[info] See https://firebase.google.com/docs/functions/organize-functions for
+[info] more information on organizing your functions using codebases.
+
+[info] Functions can be deployed with firebase deploy.
+
+[info] +  Wrote zebrafish-registry/requirements.txt 
+[info] +  Wrote zebrafish-registry/.gitignore 
+[info] +  Wrote zebrafish-registry/main.py 
+[debug] [2025-04-26T17:34:21.905Z] Running command with virtualenv: command="D:\Zebrafish registry VS code\zebrafish-registry\venv\Scripts\activate.bat", args=["","&&","pip3","install","--upgrade","pip"]
+[debug] [2025-04-26T17:34:27.754Z] Error: spawn "D:\Zebrafish registry VS code\zebrafish-registry\venv\Scripts\activate.bat" ENOENT
+    at notFoundError (C:\Users\Jaskaran Singh\AppData\Roaming\npm\node_modules\firebase-tools\node_modules\cross-spawn\lib\enoent.js:6:26)
+    at verifyENOENT (C:\Users\Jaskaran Singh\AppData\Roaming\npm\node_modules\firebase-tools\node_modules\cross-spawn\lib\enoent.js:40:16)
+    at cp.emit (C:\Users\Jaskaran Singh\AppData\Roaming\npm\node_modules\firebase-tools\node_modules\cross-spawn\lib\enoent.js:27:25)
+    at ChildProcess._handle.onexit (node:internal/child_process:293:12)
+[error] 
+[error] Error: An unexpected error has occurred.
