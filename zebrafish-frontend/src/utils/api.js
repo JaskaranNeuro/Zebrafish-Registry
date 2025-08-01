@@ -46,9 +46,7 @@ api.interceptors.request.use(async config => {
       const { csrfTokenId, csrfToken } = await getCsrfToken();
       config.headers['X-CSRF-TOKEN-ID'] = csrfTokenId;
       config.headers['X-CSRF-TOKEN'] = csrfToken;
-      // Reset tokens after use (they're single-use)
-      csrfTokenId = null;
-      csrfToken = null;
+      // Note: CSRF tokens are single-use
     } catch (error) {
       console.error('Failed to add CSRF token to request:', error);
     }
