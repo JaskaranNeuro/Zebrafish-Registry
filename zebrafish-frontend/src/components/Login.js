@@ -60,7 +60,7 @@ const Login = ({ onLoginSuccess }) => {
     
     try {
       console.log('Attempting login with:', loginData);
-      const response = await axios.post('http://localhost:5000/api/login', loginData);
+      const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/login`, loginData);
 
       console.log('Login response:', response.data);
       if (response.data && response.data.access_token) {
