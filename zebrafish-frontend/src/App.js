@@ -295,18 +295,24 @@ const handleLoginSuccess = useCallback(async (token) => {
   
   console.log("Login success with token:", token.substring(0, 20) + "...");
   
-  // Clear any previous tokens first
+  // Clear any previous state first
   localStorage.removeItem('token');
+  localStorage.removeItem('userRole');
+  localStorage.removeItem('activeTab');
   
   // Store the token with proper formatting
   localStorage.setItem('token', token);
   
   try {
+    // Set authenticated state immediately to avoid blank page
+    setIsAuthenticated(true);
+    
     // Small delay to ensure token is stored
-    await new Promise(resolve => setTimeout(resolve, 100));
+    await new Promise(resolve => setTimeout(resolve, 200));
     
     // Make the API call to get user info - use a try-catch for each API call
     try {
+      console.log("Fetching user info after login...");
       const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/user`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -316,9 +322,7 @@ const handleLoginSuccess = useCallback(async (token) => {
       if (response.data && response.data.role) {
         // Get the role directly from the API response
         const role = String(response.data.role).toLowerCase();
-        
-        // Set auth state AFTER we have the role
-        setIsAuthenticated(true);
+        console.log("Setting user role:", role);
         
         // Set userRole first before anything else
         setUserRole(role);
@@ -332,28 +336,47 @@ const handleLoginSuccess = useCallback(async (token) => {
           setActiveTab('registry');
           localStorage.setItem('activeTab', 'registry');
         }
+        
+        console.log("User login setup complete");
+      } else {
+        console.error("No role found in user response");
+        // Set default values to avoid blank page
+        setActiveTab('registry');
+        localStorage.setItem('activeTab', 'registry');
       }
     } catch (userError) {
       console.error("Error fetching user data:", userError);
+      // Set default values to avoid blank page
+      setActiveTab('registry');
+      localStorage.setItem('activeTab', 'registry');
     }
     
     // Fetch racks in a separate try-catch
     try {
+      console.log("Fetching racks after login...");
       await fetchRacks();
     } catch (racksError) {
       console.error("Error fetching racks:", racksError);
     }
     
     // Always set these states to avoid getting stuck
-    setIsAuthenticated(true);
     setDataLoaded(true);
+    console.log("Login flow completed successfully");
     
   } catch (error) {
     console.error("Error in handleLoginSuccess:", error);
-    // In case of error, still set authenticated state
+    // Even if there's an error, set states to avoid blank page
     setIsAuthenticated(true);
     setDataLoaded(true);
+    setActiveTab('registry');
+    localStorage.setItem('activeTab', 'registry');
   }
+  
+  // Failsafe timeout - if something goes wrong, still show the app
+  setTimeout(() => {
+    console.log("Failsafe: Ensuring dataLoaded is true after timeout");
+    setDataLoaded(true);
+  }, 3000);
 }, [fetchRacks, setActiveTab, setDataLoaded, setIsAuthenticated, setUserRole]);
 
   // Remove the handleLogout definition that was here
@@ -432,6 +455,14 @@ const handleTabChange = useCallback((event, newTab) => {
             <Typography variant="h5">
               Loading data...
             </Typography>
+            {/* Add a fallback button in case loading gets stuck */}
+            <Button 
+              variant="outlined" 
+              onClick={() => setDataLoaded(true)}
+              sx={{ mt: 2 }}
+            >
+              Continue Anyway
+            </Button>
           </Box>
         </Container>
       </>

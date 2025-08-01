@@ -67,10 +67,11 @@ const Login = ({ onLoginSuccess }) => {
         // Pass the token to parent component
         onLoginSuccess(response.data.access_token);
 
-        // Handle redirect after a short delay
+        // Handle redirect after a longer delay to ensure state is set
         setTimeout(() => {
+          console.log('Navigating to:', redirectUrl);
           navigate(redirectUrl);
-        }, 300);
+        }, 1000); // Increased delay
       } else {
         setError('Login successful but no token received');
       }
