@@ -46,12 +46,12 @@ const SuperAdminPage = () => {
 
       try {
         // Verify the token is valid
-        const userResponse = await axios.get('`${process.env.REACT_APP_API_BASE_URL}/user', {
+        const userResponse = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/user`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
 
         // Check super admin status
-        const superAdminResponse = await axios.get('`${process.env.REACT_APP_API_BASE_URL}/check-super-admin', {
+        const superAdminResponse = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/check-super-admin`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
 
@@ -92,7 +92,7 @@ const SuperAdminPage = () => {
       setError('');
       const token = localStorage.getItem('token');
       const response = await axios.get(
-        '`${process.env.REACT_APP_API_BASE_URL}/super-admin/facilities',
+        `${process.env.REACT_APP_API_BASE_URL}/super-admin/facilities`,
         {
           headers: {
             'Authorization': `Bearer ${token}`
@@ -115,7 +115,7 @@ const SuperAdminPage = () => {
       setError('');
       const token = localStorage.getItem('token');
       const response = await axios.post(
-        '`${process.env.REACT_APP_API_BASE_URL}/super-admin/subscription/extend',
+        `${process.env.REACT_APP_API_BASE_URL}/super-admin/subscription/extend`,
         {
           facility_id: selectedFacility.id,
           plan_type: formData.planType,
@@ -143,7 +143,7 @@ const SuperAdminPage = () => {
       setError('');
       const token = localStorage.getItem('token');
       const response = await axios.post(
-        '`${process.env.REACT_APP_API_BASE_URL}/super-admin/subscription/end',
+        `${process.env.REACT_APP_API_BASE_URL}/super-admin/subscription/end`,
         {
           facility_id: selectedFacility.id
         },

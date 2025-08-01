@@ -25,7 +25,7 @@ const SuperAdminPanel = () => {
   const fetchFacilities = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get('`${process.env.REACT_APP_API_BASE_URL}/admin/facilities', {
+      const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/admin/facilities`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       setFacilities(response.data.facilities);
@@ -40,7 +40,7 @@ const SuperAdminPanel = () => {
       setLoading(true);
       const token = localStorage.getItem('token');
       
-      await axios.post('`${process.env.REACT_APP_API_BASE_URL}/subscription/admin-extend', {
+      await axios.post(`${process.env.REACT_APP_API_BASE_URL}/subscription/admin-extend`, {
         facility_id: selectedFacility.id,
         days: extensionDays,
         plan: planType
@@ -70,7 +70,7 @@ const SuperAdminPanel = () => {
       setLoading(true);
       const token = localStorage.getItem('token');
       
-      await axios.post('`${process.env.REACT_APP_API_BASE_URL}/subscription/admin/end', 
+      await axios.post(`${process.env.REACT_APP_API_BASE_URL}/subscription/admin/end`, 
         { facility_id: facilityId },
         { headers: { 'Authorization': `Bearer ${token}` }}
       );

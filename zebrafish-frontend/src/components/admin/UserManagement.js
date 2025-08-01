@@ -24,7 +24,7 @@ const UserManagement = () => {
     try {
       const token = localStorage.getItem('token');
       console.log("Fetching users with token:", token);
-      const response = await axios.get('`${process.env.REACT_APP_API_BASE_URL}/admin/users', {
+      const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/admin/users`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       console.log("Users fetched successfully:", response.data);
@@ -56,7 +56,7 @@ const UserManagement = () => {
       console.log("Creating new user:", newUser);
       const token = localStorage.getItem('token');
       // Make sure this URL is correct
-      const response = await axios.post('`${process.env.REACT_APP_API_BASE_URL}/admin/users', 
+      const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/admin/users`, 
         newUser,
         { headers: { 'Authorization': `Bearer ${token}` }}
       );

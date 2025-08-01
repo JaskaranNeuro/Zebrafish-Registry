@@ -86,7 +86,7 @@ const PaymentFormContent = ({
       console.log("Days:", selectedPaymentDays);
       
       // Update the payment submission around line 236
-      const response = await axios.post('`${process.env.REACT_APP_API_BASE_URL}/subscription/payment', {
+      const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/subscription/payment`, {
         paymentMethodId: paymentMethod.id,
         plan: selectedPaymentPlan,
         period: selectedPaymentPeriod, // Use period instead of days
@@ -132,7 +132,7 @@ const PaymentFormContent = ({
           try {
             // Now we verify the payment with the backend
             // Update the verification around line 273
-            const verifyResponse = await axios.post('`${process.env.REACT_APP_API_BASE_URL}/subscription/payment/verify', {
+            const verifyResponse = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/subscription/payment/verify`, {
               payment_intent_id: response.data.payment_intent_id,
               plan: selectedPaymentPlan,
               period: selectedPaymentPeriod, // Use period instead of days
@@ -273,7 +273,7 @@ const SubscriptionInfo = () => {
       const token = localStorage.getItem('token');
       console.log("Fetching subscription status with token:", token ? "token present" : "no token");
       
-      const response = await axios.get('`${process.env.REACT_APP_API_BASE_URL}/subscription/status', {
+      const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/subscription/status`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       
@@ -308,7 +308,7 @@ const SubscriptionInfo = () => {
   const fetchPlans = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get('`${process.env.REACT_APP_API_BASE_URL}/subscription/plans', {
+      const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/subscription/plans`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       setPlans(response.data.plans || []);
@@ -329,7 +329,7 @@ const SubscriptionInfo = () => {
   const handleExtendSubscription = async () => {
     try {
       const token = localStorage.getItem('token');
-      await axios.post('`${process.env.REACT_APP_API_BASE_URL}/subscription/extend', 
+      await axios.post(`${process.env.REACT_APP_API_BASE_URL}/subscription/extend`, 
         { period: selectedPeriod, plan: planType },
         { headers: { 'Authorization': `Bearer ${token}` }}
       );
@@ -440,7 +440,7 @@ const handleEndSubscription = async () => {
     setError(null);
     const token = localStorage.getItem('token');
     
-    const response = await axios.post('`${process.env.REACT_APP_API_BASE_URL}/subscription/end', 
+    const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/subscription/end`, 
       {}, // No body needed for this request
       { headers: { 'Authorization': `Bearer ${token}` }}
     );
