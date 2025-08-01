@@ -57,7 +57,7 @@ const TankBreedingStats = () => {
     const fetchRacks = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await axios.get('`${process.env.REACT_APP_API_BASE_URL}/racks', {
+        const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/racks`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         setRacks(response.data);

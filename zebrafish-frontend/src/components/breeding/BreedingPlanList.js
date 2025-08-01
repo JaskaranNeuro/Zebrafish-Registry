@@ -85,7 +85,7 @@ const BreedingPlanList = ({ profile, onBack }) => {
   const fetchTanks = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get('`${process.env.REACT_APP_API_BASE_URL}/racks', {
+      const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/racks`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -129,7 +129,7 @@ const BreedingPlanList = ({ profile, onBack }) => {
       };
 
       const token = localStorage.getItem('token');
-      await axios.post('`${process.env.REACT_APP_API_BASE_URL}/breeding/plans', dataWithProfile, {
+      await axios.post(`${process.env.REACT_APP_API_BASE_URL}/breeding/plans`, dataWithProfile, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       
@@ -239,7 +239,7 @@ const BreedingPlanList = ({ profile, onBack }) => {
       
       const token = localStorage.getItem('token');
       await axios.post(
-        '`${process.env.REACT_APP_API_BASE_URL}/breeding/plans', 
+        `${process.env.REACT_APP_API_BASE_URL}/breeding/plans`, 
         newPlanData,
         {
           headers: { 'Authorization': `Bearer ${token}` }

@@ -36,11 +36,26 @@ const ProfileList = ({ onSelectProfile }) => {
       dispatch(setLoading(true));
       try {
         const token = localStorage.getItem('token');
-        const response = await axios.get('`${process.env.REACT_APP_API_BASE_URL}/breeding/profiles', {
+        const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/breeding/profiles`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
         });
+        
+        // Validate that we got proper JSON data, not HTML
+        if (typeof response.data === 'string' && response.data.includes('<!doctype html>')) {
+          console.error("ProfileList: Received HTML instead of JSON - API error");
+          dispatch(setProfiles([])); // Set empty array instead of HTML
+          return;
+        }
+        
+        // Validate that response.data is an array
+        if (!Array.isArray(response.data)) {
+          console.error("ProfileList: Response data is not an array:", typeof response.data);
+          dispatch(setProfiles([])); // Set empty array as fallback
+          return;
+        }
+        
         dispatch(setProfiles(response.data));
       } catch (err) {
         console.error('Error fetching profiles:', err);
@@ -112,6 +127,16 @@ const ProfileList = ({ onSelectProfile }) => {
     return (
       <Typography color="error" sx={{ p: 2 }}>
         {error}
+      </Typography>
+    );
+  }
+
+  // Add safety check to ensure profiles is an array
+  if (!Array.isArray(profiles)) {
+    console.error("ProfileList render: profiles is not an array:", typeof profiles);
+    return (
+      <Typography color="error" sx={{ p: 2 }}>
+        Invalid data format received. Please refresh the page.
       </Typography>
     );
   }

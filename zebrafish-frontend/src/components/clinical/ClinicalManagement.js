@@ -17,7 +17,7 @@ const ClinicalManagement = () => {
     try {
       setLoading(true);
       const token = localStorage.getItem('token');
-      const response = await axios.get('`${process.env.REACT_APP_API_BASE_URL}/clinical/cases', {
+      const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/clinical/cases`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       setCases(response.data);

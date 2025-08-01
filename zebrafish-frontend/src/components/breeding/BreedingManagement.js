@@ -19,13 +19,13 @@ const BreedingManagement = () => {
   const handleCreateProfile = async () => {
     try {
       const token = localStorage.getItem('token');
-      await axios.post('`${process.env.REACT_APP_API_BASE_URL}/breeding/profiles', 
+      await axios.post(`${process.env.REACT_APP_API_BASE_URL}/breeding/profiles`, 
         { name: newProfileName },
         { headers: { 'Authorization': `Bearer ${token}` }}
       );
 
       // Update profiles in Redux store
-      const profilesResponse = await axios.get('`${process.env.REACT_APP_API_BASE_URL}/breeding/profiles', {
+      const profilesResponse = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/breeding/profiles`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       dispatch(setProfiles(profilesResponse.data));
