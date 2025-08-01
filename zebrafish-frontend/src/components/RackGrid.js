@@ -171,7 +171,7 @@ const RackGrid = ({ rack, onTankMove }) => {
       
       // Call new API endpoint to swap tanks
       await axios.post(
-        '`${process.env.REACT_APP_API_BASE_URL}/tanks/swap-positions',
+        `${process.env.REACT_APP_API_BASE_URL}/tanks/swap-positions`,
         {
           tank1Id: sourceTank.id,
           tank2Id: destTank.id,
@@ -188,7 +188,7 @@ const RackGrid = ({ rack, onTankMove }) => {
 
       // Refresh racks data after swap
       const { data: updatedRacks } = await axios.get(
-        '`${process.env.REACT_APP_API_BASE_URL}/racks',
+        `${process.env.REACT_APP_API_BASE_URL}/racks`,
         {
           headers: { Authorization: `Bearer ${token}` }
         }
@@ -242,7 +242,7 @@ const RackGrid = ({ rack, onTankMove }) => {
 
         // If replacing positions, use the swap endpoint
         await axios.post(
-          '`${process.env.REACT_APP_API_BASE_URL}/tanks/swap-positions',
+          `${process.env.REACT_APP_API_BASE_URL}/tanks/swap-positions`,
           {
             tank1Id: updatedTank.id,
             tank2Id: targetTank.id,
@@ -255,13 +255,17 @@ const RackGrid = ({ rack, onTankMove }) => {
         // Regular save logic
         if (!updatedTank.id) {
           // This is a new tank creation
-          await axios.post('`${process.env.REACT_APP_API_BASE_URL}/tanks', {
+          console.log('🔧 DEBUG: Creating new tank:', updatedTank);
+          console.log('🔧 DEBUG: Tank creation URL:', `${process.env.REACT_APP_API_BASE_URL}/tanks`);
+          await axios.post(`${process.env.REACT_APP_API_BASE_URL}/tanks`, {
             ...updatedTank,
             size: updatedTank.size?.toUpperCase() || 'REGULAR',
             rack_id: effectiveRack.id
           }, config);
+          console.log('🔧 DEBUG: Tank created successfully');
         } else {
           // This is an existing tank update
+          console.log('🔧 DEBUG: Updating existing tank:', updatedTank.id);
           await axios.put(
             `${process.env.REACT_APP_API_BASE_URL}/tanks/${updatedTank.id}`,
             {
@@ -270,14 +274,30 @@ const RackGrid = ({ rack, onTankMove }) => {
             },
             config
           );
+          console.log('🔧 DEBUG: Tank updated successfully');
         }
       }
 
       // Refresh racks data after any change
       const { data: updatedRacks } = await axios.get(
-        '`${process.env.REACT_APP_API_BASE_URL}/racks',
+        `${process.env.REACT_APP_API_BASE_URL}/racks`,
         config
       );
+      
+      // Validate the racks fetch response
+      if (typeof updatedRacks === 'string' && updatedRacks.includes('<!doctype html>')) {
+        console.error("handleTankSave: Received HTML when fetching updated racks");
+        setError("Tank saved but failed to refresh list. Please refresh the page.");
+        return;
+      }
+      
+      if (!Array.isArray(updatedRacks)) {
+        console.error("handleTankSave: Updated racks data is not an array:", typeof updatedRacks);
+        setError("Tank saved but failed to refresh list. Please refresh the page.");
+        return;
+      }
+      
+      console.log('🔧 DEBUG: Successfully refreshed rack list after tank operation, rack count:', updatedRacks.length);
       dispatch(setRacks(updatedRacks));
       setSelectedTank(null);
       setError(null);
@@ -331,7 +351,7 @@ const RackGrid = ({ rack, onTankMove }) => {
 
       // Refresh racks data after deletion
       const { data: updatedRacks } = await axios.get(
-        '`${process.env.REACT_APP_API_BASE_URL}/racks',
+        `${process.env.REACT_APP_API_BASE_URL}/racks`,
         {
           headers: {
             'Authorization': `Bearer ${token}`
@@ -405,7 +425,7 @@ const RackGrid = ({ rack, onTankMove }) => {
       console.log('Backend row config response:', response.data);
       
       // Refresh racks after update
-      const { data: updatedRacks } = await axios.get('`${process.env.REACT_APP_API_BASE_URL}/racks', {
+      const { data: updatedRacks } = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/racks`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       dispatch(setRacks(updatedRacks));
