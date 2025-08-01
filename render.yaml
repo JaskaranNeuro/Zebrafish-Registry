@@ -2,6 +2,7 @@ services:
   - type: web
     name: zebrafish-backend
     env: python
+    plan: free
     buildCommand: cd backend && pip install -r requirements.txt
     startCommand: cd backend && gunicorn wsgi:app
     envVars:
@@ -20,3 +21,4 @@ databases:
   - name: zebrafish-db
     databaseName: zebrafish
     user: zebrafish
+    plan: free
