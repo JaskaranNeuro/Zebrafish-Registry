@@ -22,12 +22,12 @@ const SuperAdminGuard = ({ children }) => {
       
       try {
         // First check if user info can be retrieved (confirms token is valid)
-        await axios.get('http://localhost:5000/api/user', {
+        await axios.get('`${process.env.REACT_APP_API_BASE_URL}/user', {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         
         // Then check super admin status
-        const response = await axios.get('http://localhost:5000/api/check-super-admin', {
+        const response = await axios.get('`${process.env.REACT_APP_API_BASE_URL}/check-super-admin', {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         

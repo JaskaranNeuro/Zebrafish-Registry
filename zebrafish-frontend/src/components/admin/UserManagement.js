@@ -24,7 +24,7 @@ const UserManagement = () => {
     try {
       const token = localStorage.getItem('token');
       console.log("Fetching users with token:", token);
-      const response = await axios.get('http://localhost:5000/api/admin/users', {
+      const response = await axios.get('`${process.env.REACT_APP_API_BASE_URL}/admin/users', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       console.log("Users fetched successfully:", response.data);
@@ -39,7 +39,7 @@ const UserManagement = () => {
     try {
       console.log(`Updating user ${userId} role to: ${newRole}`);
       const token = localStorage.getItem('token');
-      const response = await axios.put(`http://localhost:5000/api/admin/users/${userId}/role`, 
+      const response = await axios.put(``${process.env.REACT_APP_API_BASE_URL}/admin/users/${userId}/role`, 
         { role: newRole },
         { headers: { 'Authorization': `Bearer ${token}` }}
       );
@@ -56,7 +56,7 @@ const UserManagement = () => {
       console.log("Creating new user:", newUser);
       const token = localStorage.getItem('token');
       // Make sure this URL is correct
-      const response = await axios.post('http://localhost:5000/api/admin/users', 
+      const response = await axios.post('`${process.env.REACT_APP_API_BASE_URL}/admin/users', 
         newUser,
         { headers: { 'Authorization': `Bearer ${token}` }}
       );
@@ -80,7 +80,7 @@ const UserManagement = () => {
     
     try {
       const token = localStorage.getItem('token');
-      await axios.delete(`http://localhost:5000/api/admin/users/${userId}`, {
+      await axios.delete(``${process.env.REACT_APP_API_BASE_URL}/admin/users/${userId}`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       
