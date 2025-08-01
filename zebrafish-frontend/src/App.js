@@ -14,6 +14,7 @@ import ClinicalManagement from './components/clinical/ClinicalManagement';
 import UserManagement from './components/admin/UserManagement';
 import Header from './components/Header';
 import SubscriptionPage from './pages/SubscriptionPage';
+import ErrorBoundary from './components/ErrorBoundary';
 // Import Routes/Route but remove BrowserRouter
 import { Route, Routes, useLocation, useNavigate, Link, Navigate } from 'react-router-dom';
 import PaymentReturnPage from './pages/PaymentReturnPage';
@@ -472,25 +473,30 @@ const handleTabChange = useCallback((event, newTab) => {
   console.log("RENDERING: Current user role:", userRole, "Active Tab:", activeTab);
 
   const renderTabs = () => {
-    const normalizedRole = userRole ? String(userRole).toLowerCase() : '';
-    console.log("Rendering tabs with role:", normalizedRole);
-    
-    if (normalizedRole === 'admin') {
-      console.log("Showing admin tabs");
-      return [
-        <Tab key="registry" value="registry" label="Tank Registry" />,
-        <Tab key="breeding" value="breeding" label="Breeding Management" />,
-        <Tab key="clinical" value="clinical" label="Clinical Management" />,
-        <Tab key="users" value="users" label="User Management" />
-      ];
-    } else if (normalizedRole === 'facility_manager') {
-      return [<Tab key="clinical" value="clinical" label="Clinical Management" />];
-    } else {
-      return [
-        <Tab key="registry" value="registry" label="Tank Registry" />,
-        <Tab key="breeding" value="breeding" label="Breeding Management" />,
-        <Tab key="clinical" value="clinical" label="Clinical Management" />
-      ];
+    try {
+      const normalizedRole = userRole ? String(userRole).toLowerCase() : '';
+      console.log("Rendering tabs with role:", normalizedRole);
+      
+      if (normalizedRole === 'admin') {
+        console.log("Showing admin tabs");
+        return [
+          <Tab key="registry" value="registry" label="Tank Registry" />,
+          <Tab key="breeding" value="breeding" label="Breeding Management" />,
+          <Tab key="clinical" value="clinical" label="Clinical Management" />,
+          <Tab key="users" value="users" label="User Management" />
+        ];
+      } else if (normalizedRole === 'facility_manager') {
+        return [<Tab key="clinical" value="clinical" label="Clinical Management" />];
+      } else {
+        return [
+          <Tab key="registry" value="registry" label="Tank Registry" />,
+          <Tab key="breeding" value="breeding" label="Breeding Management" />,
+          <Tab key="clinical" value="clinical" label="Clinical Management" />
+        ];
+      }
+    } catch (error) {
+      console.error("Error in renderTabs:", error);
+      return [<Tab key="registry" value="registry" label="Tank Registry" />];
     }
   };
 
@@ -520,72 +526,87 @@ const handleTabChange = useCallback((event, newTab) => {
           } 
         />
         
-        {/* Default routes handled by AppRoutes component */}
-        <Route path="*" element={
+        {/* Subscription management route */}
+        <Route 
+          path="/subscription-management" 
+          element={
+            isAuthenticated && userRole === 'admin' 
+              ? <SubscriptionPage onLogout={handleLogout} /> 
+              : <Navigate to="/" replace />
+          } 
+        />
+        
+        {/* Payment return route */}
+        <Route 
+          path="/payment-return" 
+          element={
+            isAuthenticated 
+              ? <PaymentReturnPage onLogout={handleLogout} /> 
+              : <Navigate to="/" replace />
+          } 
+        />
+        
+        {/* Main application route */}
+        <Route path="/" element={
           isAuthenticated ? (
-            <AppRoutes 
-              userRole={userRole} 
-              handleLogout={handleLogout} 
-              isAuthenticated={isAuthenticated}
-            >
-              <>
-                {isAuthenticated && <Header onLogout={handleLogout} isSuperAdmin={isSuperAdmin} />}
-                {isAuthenticated && <SubscriptionAlert />}
-                <Container 
-                  maxWidth={false} // Important: remove the maxWidth constraint
-                  disableGutters={true} // Remove default padding
-                  sx={{
-                    px: 1, // Minimal padding
-                    width: '88vw', // Full viewport width
-                    maxWidth: '100vw', // Ensure no constraints
-                    overflowX: 'hidden' // Prevent horizontal scrolling
-                  }}
-                >
-                  <Box sx={{ my: 4 }}>
-                    {/* Header row with title and subscription button */}
-                    <Box sx={{ 
-                      display: 'flex', 
-                      justifyContent: 'space-between', 
-                      alignItems: 'center', 
-                      mb: 3 
-                    }}>
-                      <Typography variant="h3" component="h1" gutterBottom sx={{ mb: 0 }}>
-                        Zebrafish Facility Management
-                      </Typography>
-                      
-                      {/* Subscription management button for admins */}
-                      {userRole && userRole.toLowerCase() === 'admin' && (
-                        <Button 
-                          variant="contained"
-                          color="primary"
-                          onClick={() => navigate('/subscription-management')}
-                          startIcon={<span role="img" aria-label="subscription">📅</span>}
-                          size="medium"
-                        >
-                          Manage Subscription
-                        </Button>
-                      )}
-                    </Box>
+            <ErrorBoundary>
+              {console.log('Rendering main app - isAuthenticated:', isAuthenticated, 'userRole:', userRole, 'activeTab:', activeTab)}
+              {isAuthenticated && <Header onLogout={handleLogout} isSuperAdmin={isSuperAdmin} />}
+              {isAuthenticated && <SubscriptionAlert />}
+              <Container 
+                maxWidth={false} // Important: remove the maxWidth constraint
+                disableGutters={true} // Remove default padding
+                sx={{
+                  px: 1, // Minimal padding
+                  width: '88vw', // Full viewport width
+                  maxWidth: '100vw', // Ensure no constraints
+                  overflowX: 'hidden' // Prevent horizontal scrolling
+                }}
+              >
+                <Box sx={{ my: 4 }}>
+                  {/* Header row with title and subscription button */}
+                  <Box sx={{ 
+                    display: 'flex', 
+                    justifyContent: 'space-between', 
+                    alignItems: 'center', 
+                    mb: 3 
+                  }}>
+                    <Typography variant="h3" component="h1" gutterBottom sx={{ mb: 0 }}>
+                      Zebrafish Facility Management
+                    </Typography>
                     
-                    <Tabs 
-                      value={activeTab}
-                      onChange={handleTabChange}
-                      sx={{ mb: 3 }}
-                    >
-                      {renderTabs()}
-                    </Tabs>
-                    
-                    <TabReset activeTab={activeTab} setActiveTab={setActiveTab} />
-                    
-                    {/* Render content based on active tab */}
-                    {activeTab === 'registry' && <RackList />}
-                    {activeTab === 'breeding' && <BreedingManagement />}
-                    {activeTab === 'clinical' && <ClinicalManagement />}
-                    {activeTab === 'users' && (userRole && userRole.toLowerCase() === 'admin') && <UserManagement />}
+                    {/* Subscription management button for admins */}
+                    {userRole && userRole.toLowerCase() === 'admin' && (
+                      <Button 
+                        variant="contained"
+                        color="primary"
+                        onClick={() => navigate('/subscription-management')}
+                        startIcon={<span role="img" aria-label="subscription">📅</span>}
+                        size="medium"
+                      >
+                        Manage Subscription
+                      </Button>
+                    )}
                   </Box>
-                </Container>
-              </>
-            </AppRoutes>
+                  
+                  <Tabs 
+                    value={activeTab}
+                    onChange={handleTabChange}
+                    sx={{ mb: 3 }}
+                  >
+                    {renderTabs()}
+                  </Tabs>
+                  
+                  <TabReset activeTab={activeTab} setActiveTab={setActiveTab} />
+                  
+                  {/* Render content based on active tab */}
+                  {activeTab === 'registry' && <RackList />}
+                  {activeTab === 'breeding' && <BreedingManagement />}
+                  {activeTab === 'clinical' && <ClinicalManagement />}
+                  {activeTab === 'users' && (userRole && userRole.toLowerCase() === 'admin') && <UserManagement />}
+                </Box>
+              </Container>
+            </ErrorBoundary>
           ) : (
             <Navigate to="/login" replace />
           )
