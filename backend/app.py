@@ -86,8 +86,10 @@ import schemas
 CORS(app, 
     resources={r"/api/*": {
         "origins": [
+            "https://zefitrack.netlify.app",
             "https://zebrafishregistry.web.app",
-            "https://zebrafishregistry.firebaseapp.com"
+            "https://zebrafishregistry.firebaseapp.com",
+            "http://localhost:3000"
         ],
         "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
         "allow_headers": ["Content-Type", "Authorization"],
@@ -1822,7 +1824,17 @@ def add_security_headers(response):
 @app.after_request
 def after_request(response):
     # Set CORS headers specifically for your frontend origin
-    response.headers["Access-Control-Allow-Origin"] = "http://localhost:3000"
+    origin = request.headers.get('Origin')
+    allowed_origins = [
+        "https://zefitrack.netlify.app",
+        "http://localhost:3000",
+        "https://zebrafishregistry.web.app",
+        "https://zebrafishregistry.firebaseapp.com"
+    ]
+    
+    if origin in allowed_origins:
+        response.headers["Access-Control-Allow-Origin"] = origin
+    
     response.headers["Access-Control-Allow-Headers"] = "Content-Type,Authorization"
     response.headers["Access-Control-Allow-Methods"] = "GET,PUT,POST,DELETE,OPTIONS,PATCH"
     response.headers["Access-Control-Allow-Credentials"] = "true"
