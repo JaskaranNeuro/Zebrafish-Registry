@@ -56,9 +56,17 @@ const BreedingPlanList = ({ profile, onBack }) => {
   const dispatch = useDispatch();
   const { plans, loading } = useSelector(state => state.breeding);
 
+  // Debug profile data
+  console.log('🔧 DEBUG: Profile data in BreedingPlanList:', profile);
+
   useEffect(() => {
-    fetchPlans(profile.id);
-    fetchTanks();
+    if (profile && profile.id) {
+      console.log('🔧 DEBUG: Fetching plans for profile ID:', profile.id);
+      fetchPlans(profile.id);
+      fetchTanks();
+    } else {
+      console.error('🔧 DEBUG: Profile is missing or has no ID:', profile);
+    }
   }, [profile.id, dispatch]);
 
   const fetchPlans = async (profileId) => {
@@ -123,20 +131,39 @@ const BreedingPlanList = ({ profile, onBack }) => {
 
   const handleSavePlan = async (planData) => {
     try {
+      console.log('🔧 DEBUG: Starting breeding plan creation with data:', planData);
+      
       const dataWithProfile = {
         ...planData,
         profile_id: profile.id
       };
+      
+      console.log('🔧 DEBUG: Data with profile:', dataWithProfile);
+      console.log('🔧 DEBUG: API URL:', `${process.env.REACT_APP_API_BASE_URL}/breeding/plans`);
 
       const token = localStorage.getItem('token');
-      await axios.post(`${process.env.REACT_APP_API_BASE_URL}/breeding/plans`, dataWithProfile, {
+      console.log('🔧 DEBUG: Token present:', token ? 'YES' : 'NO');
+      
+      const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/breeding/plans`, dataWithProfile, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
+      
+      console.log('🔧 DEBUG: Breeding plan creation response:', response.data);
+      console.log('🔧 DEBUG: Response status:', response.status);
       
       fetchPlans(profile.id);
       setIsDialogOpen(false);
     } catch (error) {
-      console.error('Error creating breeding plan:', error);
+      console.error('🔧 DEBUG: Error creating breeding plan:', error);
+      console.error('🔧 DEBUG: Error response:', error.response?.data);
+      console.error('🔧 DEBUG: Error status:', error.response?.status);
+      
+      // Show user-friendly error message
+      if (error.response?.data?.message) {
+        alert(`Failed to create breeding plan: ${error.response.data.message}`);
+      } else {
+        alert('Failed to create breeding plan. Please check the console for details and try again.');
+      }
     }
   };
 
