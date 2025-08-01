@@ -1,13 +1,17 @@
 # At the top of your app.py or config.py
 from dotenv import load_dotenv
-load_dotenv()  # This loads the variables from .env
+import os
+import secrets
+
+# Load .env file if it exists (for local development)
+if os.path.exists('.env'):
+    load_dotenv()
+
 from flask import Flask, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 from datetime import timedelta
-import os
-import secrets
 
 # Initialize the app
 app = Flask(__name__)

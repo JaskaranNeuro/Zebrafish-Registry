@@ -1,8 +1,12 @@
 # At the beginning of your app.py
 # At the top of your app.py or config.py
 from dotenv import load_dotenv
-load_dotenv()  # This loads the variables from .env
 import os
+
+# Load .env file if it exists (for local development)
+if os.path.exists('.env'):
+    load_dotenv()
+
 if not os.path.exists("logs"):
     os.makedirs("logs")
 from flask import Flask, jsonify, request, make_response
