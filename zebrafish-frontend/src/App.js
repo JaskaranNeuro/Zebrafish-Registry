@@ -95,6 +95,20 @@ const fetchRacks = useCallback(async () => {
       }
     });
     
+    // Validate that we got proper JSON data, not HTML
+    if (typeof response.data === 'string' && response.data.includes('<!doctype html>')) {
+      console.error("App: Received HTML instead of JSON - API error");
+      dispatch(setRacks([])); // Set empty array instead of HTML
+      return [];
+    }
+    
+    // Validate that response.data is an array
+    if (!Array.isArray(response.data)) {
+      console.error("App: Response data is not an array:", typeof response.data);
+      dispatch(setRacks([])); // Set empty array as fallback
+      return [];
+    }
+    
     console.log("Racks data received:", response.data);
     console.log("Racks count:", response.data.length);
     
@@ -108,6 +122,7 @@ const fetchRacks = useCallback(async () => {
     return response.data;
   } catch (error) {
     console.error('Error fetching racks:', error);
+    dispatch(setRacks([])); // Set empty array on error
     return null;
   }
 }, [dispatch]);
