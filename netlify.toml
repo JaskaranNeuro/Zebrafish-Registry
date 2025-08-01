@@ -1,0 +1,12 @@
+[build]
+  base = "zebrafish-frontend"
+  publish = "zebrafish-frontend/build"
+  command = "npm install && npm run build"
+
+[build.environment]
+  NODE_VERSION = "18"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
