@@ -1901,6 +1901,34 @@ def check_super_admin():
         return jsonify({"error": str(e), "is_super_admin": False}), 500
 
 # Add this after your imports
+@app.route('/api/init-db', methods=['POST'])
+def init_database():
+    """Initialize database tables"""
+    try:
+        # Create all tables
+        db.create_all()
+        
+        # Create a default facility if none exists
+        if not FacilityModel.query.first():
+            default_facility = FacilityModel(
+                name="Default Facility",
+                organization_name="Zebrafish Research Lab"
+            )
+            db.session.add(default_facility)
+            db.session.commit()
+            
+        return jsonify({
+            "message": "Database initialized successfully", 
+            "status": "success"
+        }), 200
+    except Exception as e:
+        db.session.rollback()
+        print(f"Error initializing database: {str(e)}")
+        return jsonify({
+            "message": f"Database initialization failed: {str(e)}", 
+            "status": "error"
+        }), 500
+
 @app.route('/api/init-test-data', methods=['POST'])
 @jwt_required()
 def init_test_data():
