@@ -87,7 +87,7 @@ const fetchRacks = useCallback(async () => {
     console.log("Fetching racks with token:", token ? "token present" : "no token");
     
     // Use axios directly with full headers specification
-    const response = await axios.get('http://localhost:5000/api/racks', {
+    const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/racks`, {
       headers: {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json'
@@ -126,7 +126,7 @@ const fetchRacks = useCallback(async () => {
           return null;
         }
         
-        const response = await axios.get('http://localhost:5000/api/user', {
+        const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/user`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         
@@ -307,7 +307,7 @@ const handleLoginSuccess = useCallback(async (token) => {
     
     // Make the API call to get user info - use a try-catch for each API call
     try {
-      const response = await axios.get('http://localhost:5000/api/user', {
+      const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/user`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       
@@ -387,7 +387,7 @@ const handleTabChange = useCallback((event, newTab) => {
     const checkUserRole = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await axios.get('http://localhost:5000/api/user', {
+        const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/user`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         
@@ -397,7 +397,7 @@ const handleTabChange = useCallback((event, newTab) => {
         } else {
           // Otherwise use SQL query through a separate endpoint
           // (You'd need to create this endpoint)
-          const superCheck = await axios.get('http://localhost:5000/api/check-super-admin', {
+          const superCheck = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/check-super-admin`, {
             headers: { 'Authorization': `Bearer ${token}` }
           });
           setIsSuperAdmin(superCheck.data.is_super_admin);
