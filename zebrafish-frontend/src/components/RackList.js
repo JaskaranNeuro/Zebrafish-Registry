@@ -35,6 +35,18 @@ const RackList = () => {
     // The data structure in Redux has changed - it's now under state.racks.items
     // instead of just state.racks.racks
     const racksData = state.racks.items || [];
+    
+    // Validate data at selector level to prevent HTML from being processed
+    if (typeof racksData === 'string' && racksData.includes('<!doctype html>')) {
+      console.error("RackList useSelector: Found HTML in Redux store - returning empty array");
+      return [];
+    }
+    
+    if (!Array.isArray(racksData)) {
+      console.error("RackList useSelector: Data is not an array:", typeof racksData);
+      return [];
+    }
+    
     console.log("Racks data in RackList:", racksData);
     if (racksData && racksData.length > 0) {
       console.log("First rack:", racksData[0]);
@@ -52,17 +64,34 @@ const RackList = () => {
       try {
         const token = localStorage.getItem('token');
         console.log("RackList: Fetching racks with token:", token ? "token present" : "no token");
+        console.log("🔧 DEBUG: Environment variable in fetchRacks:", process.env.REACT_APP_API_BASE_URL);
+        console.log("🔧 DEBUG: Full URL for fetchRacks:", `${process.env.REACT_APP_API_BASE_URL}/racks`);
         
-        const response = await axios.get('${process.env.REACT_APP_API_BASE_URL}/racks', {
+        const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/racks`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
         });
         
+        // Validate that we got proper JSON data, not HTML
+        if (typeof response.data === 'string' && response.data.includes('<!doctype html>')) {
+          console.error("RackList: Received HTML instead of JSON - API error");
+          dispatch(setRacks([])); // Set empty array instead of HTML
+          return;
+        }
+        
+        // Validate that response.data is an array
+        if (!Array.isArray(response.data)) {
+          console.error("RackList: Response data is not an array:", typeof response.data);
+          dispatch(setRacks([])); // Set empty array as fallback
+          return;
+        }
+        
         console.log("RackList: Racks fetched successfully, count:", response.data.length);
         dispatch(setRacks(response.data));
       } catch (error) {
         console.error('RackList: Error fetching racks:', error);
+        dispatch(setRacks([])); // Set empty array on error
       }
     };
     
@@ -83,8 +112,24 @@ const RackList = () => {
         }
       );
       // Refresh racks data after successful move
-      const response = await axios.get('${process.env.REACT_APP_API_BASE_URL}/racks');
-      dispatch(setRacks(response.data));
+      const racksResponse = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/racks`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      
+      // Validate the racks fetch response
+      if (typeof racksResponse.data === 'string' && racksResponse.data.includes('<!doctype html>')) {
+        console.error("handleTankMove: Received HTML when fetching updated racks");
+        alert("Tank moved but failed to refresh list. Please refresh the page.");
+        return;
+      }
+      
+      if (!Array.isArray(racksResponse.data)) {
+        console.error("handleTankMove: Updated racks data is not an array:", typeof racksResponse.data);
+        alert("Tank moved but failed to refresh list. Please refresh the page.");
+        return;
+      }
+      
+      dispatch(setRacks(racksResponse.data));
     } catch (error) {
       console.error('Error moving tank:', error);
     }
@@ -92,7 +137,12 @@ const RackList = () => {
 
   const handleCreateRack = async (rackData) => {
     try {
+      console.log('🔧 DEBUG: Starting rack creation with data:', rackData);
+      console.log('🔧 DEBUG: Environment variable:', process.env.REACT_APP_API_BASE_URL);
       const token = localStorage.getItem('token');
+      console.log('🔧 DEBUG: Token present:', token ? 'YES' : 'NO');
+      console.log('🔧 DEBUG: API URL:', `${process.env.REACT_APP_API_BASE_URL}/racks`);
+      
       const response = await axios.post(
         `${process.env.REACT_APP_API_BASE_URL}/racks`,
         rackData,
@@ -103,17 +153,55 @@ const RackList = () => {
           }
         }
       );
+      
+      console.log('🔧 DEBUG: Rack creation response:', response.data);
 
-      if (response.data && response.data.row_configs) {
-        const { data: updatedRacks } = await axios.get('${process.env.REACT_APP_API_BASE_URL}/racks', {
+      // Validate rack creation response
+      if (typeof response.data === 'string' && response.data.includes('<!doctype html>')) {
+        console.error("handleCreateRack: Received HTML instead of JSON - rack creation failed");
+        alert("Rack creation failed - server returned an error. Please try again.");
+        return;
+      }
+
+      // Always refresh the rack list after successful creation (status 200/201)
+      if (response.status === 200 || response.status === 201) {
+        console.log('🔧 DEBUG: Rack created successfully, refreshing rack list...');
+        const racksResponse = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/racks`, {
           headers: { Authorization: `Bearer ${token}` }
         });
-        dispatch(setRacks(updatedRacks));
+        
+        // Validate the racks fetch response
+        if (typeof racksResponse.data === 'string' && racksResponse.data.includes('<!doctype html>')) {
+          console.error("handleCreateRack: Received HTML when fetching updated racks");
+          alert("Rack created but failed to refresh list. Please refresh the page.");
+          return;
+        }
+        
+        if (!Array.isArray(racksResponse.data)) {
+          console.error("handleCreateRack: Updated racks data is not an array:", typeof racksResponse.data);
+          alert("Rack created but failed to refresh list. Please refresh the page.");
+          return;
+        }
+        
+        console.log('🔧 DEBUG: Successfully refreshed rack list with', racksResponse.data.length, 'racks');
+        dispatch(setRacks(racksResponse.data));
+      } else {
+        console.error('🔧 DEBUG: Unexpected response status:', response.status);
       }
 
       setIsDialogOpen(false);
     } catch (error) {
-      console.error('Error creating rack:', error);
+      console.error('🔧 DEBUG: Error creating rack:', error);
+      console.error('🔧 DEBUG: Error response:', error.response?.data);
+      console.error('🔧 DEBUG: Error status:', error.response?.status);
+      
+      // Check if the error response is HTML (server error)
+      if (error.response?.data && typeof error.response.data === 'string' && 
+          error.response.data.includes('<!doctype html>')) {
+        alert("Rack creation failed - server is currently unavailable. Please wait a moment and try again.");
+      } else {
+        alert("Rack creation failed. Please check the console for details and try again.");
+      }
     }
   };
 
@@ -124,24 +212,47 @@ const RackList = () => {
 
     try {
       const token = localStorage.getItem('token');
-      await axios.delete(`${process.env.REACT_APP_API_BASE_URL}/racks/${rackId}`, {
+      console.log('🔧 DEBUG: Deleting rack with ID:', rackId);
+      
+      const deleteResponse = await axios.delete(`${process.env.REACT_APP_API_BASE_URL}/racks/${rackId}`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
       });
+      
+      console.log('🔧 DEBUG: Delete response status:', deleteResponse.status);
+      console.log('🔧 DEBUG: Delete response data:', deleteResponse.data);
 
       // Refresh racks data after deletion
-      const { data: updatedRacks } = await axios.get(
-        '${process.env.REACT_APP_API_BASE_URL}/racks',
+      console.log('🔧 DEBUG: Fetching updated rack list after deletion...');
+      const racksResponse = await axios.get(
+        `${process.env.REACT_APP_API_BASE_URL}/racks`,
         {
           headers: {
             'Authorization': `Bearer ${token}`
           }
         }
       );
-      dispatch(setRacks(updatedRacks));
+      
+      // Validate the racks fetch response
+      if (typeof racksResponse.data === 'string' && racksResponse.data.includes('<!doctype html>')) {
+        console.error("handleDeleteRack: Received HTML when fetching updated racks");
+        alert("Rack deleted but failed to refresh list. Please refresh the page.");
+        return;
+      }
+      
+      if (!Array.isArray(racksResponse.data)) {
+        console.error("handleDeleteRack: Updated racks data is not an array:", typeof racksResponse.data);
+        alert("Rack deleted but failed to refresh list. Please refresh the page.");
+        return;
+      }
+      
+      console.log('🔧 DEBUG: Successfully refreshed rack list after deletion, new count:', racksResponse.data.length);
+      dispatch(setRacks(racksResponse.data));
     } catch (error) {
-      console.error('Error deleting rack:', error);
+      console.error('🔧 DEBUG: Error deleting rack:', error);
+      console.error('🔧 DEBUG: Delete error response:', error.response?.data);
+      console.error('🔧 DEBUG: Delete error status:', error.response?.status);
     }
   };
 
@@ -151,7 +262,7 @@ const RackList = () => {
       console.log('Search data:', searchData);
       
       const { data } = await axios.post(
-        '${process.env.REACT_APP_API_BASE_URL}/search/tanks',
+        `${process.env.REACT_APP_API_BASE_URL}/search/tanks`,
         searchData,
         {
           headers: {
@@ -188,7 +299,7 @@ const RackList = () => {
     try {
       const token = localStorage.getItem('token');
       const response = await axios.post(
-        '${process.env.REACT_APP_API_BASE_URL}/tanks/color-mapping',
+        `${process.env.REACT_APP_API_BASE_URL}/tanks/color-mapping`,
         mappingData,
         {
           headers: {
@@ -199,13 +310,27 @@ const RackList = () => {
       );
       if (response.data) {
         // Refresh racks after color update
-        const { data: updatedRacks } = await axios.get(
-          '${process.env.REACT_APP_API_BASE_URL}/racks',
+        const racksResponse = await axios.get(
+          `${process.env.REACT_APP_API_BASE_URL}/racks`,
           {
             headers: { Authorization: `Bearer ${token}` }
           }
         );
-        dispatch(setRacks(updatedRacks));
+        
+        // Validate the racks fetch response
+        if (typeof racksResponse.data === 'string' && racksResponse.data.includes('<!doctype html>')) {
+          console.error("handleColorMapping: Received HTML when fetching updated racks");
+          alert("Color mapping applied but failed to refresh list. Please refresh the page.");
+          return;
+        }
+        
+        if (!Array.isArray(racksResponse.data)) {
+          console.error("handleColorMapping: Updated racks data is not an array:", typeof racksResponse.data);
+          alert("Color mapping applied but failed to refresh list. Please refresh the page.");
+          return;
+        }
+        
+        dispatch(setRacks(racksResponse.data));
       }
     } catch (error) {
       console.error('Error applying color mapping:', error);
@@ -215,7 +340,7 @@ const RackList = () => {
   const handleTankSave = async (updatedTank, tankData, config) => {
     if (!updatedTank.id) {
       // This is a new tank creation
-      await axios.post('${process.env.REACT_APP_API_BASE_URL}/tanks', tankData, config);
+      await axios.post(`${process.env.REACT_APP_API_BASE_URL}/tanks`, tankData, config);
     } else {
       // This is an existing tank update
       await axios.put(
@@ -293,7 +418,8 @@ const RackList = () => {
                   {rackData.rack_name || rackData.name} ({rackData.lab_id})
                 </Typography>
                 <Grid container spacing={1}>
-                  {rackData.tanks.map((tank) => (
+                  {/* Add safety check for tanks array */}
+                  {Array.isArray(rackData.tanks) && rackData.tanks.map((tank) => (
                     <Grid item xs={12} sm={6} md={4} lg={3} key={tank.id}>
                       <Paper
                         sx={{
@@ -333,6 +459,12 @@ const RackList = () => {
     }
   
     // Enhanced UI for default view - show all racks with better separation
+    // Add safety check to ensure racks is an array
+    if (!Array.isArray(racks)) {
+      console.error("RackList render: racks is not an array:", typeof racks);
+      return <Typography>No racks available</Typography>;
+    }
+    
     return racks.map((rack) => {
       return (
         <Paper 
