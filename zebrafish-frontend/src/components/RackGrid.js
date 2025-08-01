@@ -171,7 +171,7 @@ const RackGrid = ({ rack, onTankMove }) => {
       
       // Call new API endpoint to swap tanks
       await axios.post(
-        'http://localhost:5000/api/tanks/swap-positions',
+        '`${process.env.REACT_APP_API_BASE_URL}/tanks/swap-positions',
         {
           tank1Id: sourceTank.id,
           tank2Id: destTank.id,
@@ -188,7 +188,7 @@ const RackGrid = ({ rack, onTankMove }) => {
 
       // Refresh racks data after swap
       const { data: updatedRacks } = await axios.get(
-        'http://localhost:5000/api/racks',
+        '`${process.env.REACT_APP_API_BASE_URL}/racks',
         {
           headers: { Authorization: `Bearer ${token}` }
         }
@@ -242,7 +242,7 @@ const RackGrid = ({ rack, onTankMove }) => {
 
         // If replacing positions, use the swap endpoint
         await axios.post(
-          'http://localhost:5000/api/tanks/swap-positions',
+          '`${process.env.REACT_APP_API_BASE_URL}/tanks/swap-positions',
           {
             tank1Id: updatedTank.id,
             tank2Id: targetTank.id,
@@ -255,7 +255,7 @@ const RackGrid = ({ rack, onTankMove }) => {
         // Regular save logic
         if (!updatedTank.id) {
           // This is a new tank creation
-          await axios.post('http://localhost:5000/api/tanks', {
+          await axios.post('`${process.env.REACT_APP_API_BASE_URL}/tanks', {
             ...updatedTank,
             size: updatedTank.size?.toUpperCase() || 'REGULAR',
             rack_id: effectiveRack.id
@@ -263,7 +263,7 @@ const RackGrid = ({ rack, onTankMove }) => {
         } else {
           // This is an existing tank update
           await axios.put(
-            `http://localhost:5000/api/tanks/${updatedTank.id}`,
+            ``${process.env.REACT_APP_API_BASE_URL}/tanks/${updatedTank.id}`,
             {
               ...updatedTank,
               size: updatedTank.size?.toUpperCase() || 'REGULAR'
@@ -275,7 +275,7 @@ const RackGrid = ({ rack, onTankMove }) => {
 
       // Refresh racks data after any change
       const { data: updatedRacks } = await axios.get(
-        'http://localhost:5000/api/racks',
+        '`${process.env.REACT_APP_API_BASE_URL}/racks',
         config
       );
       dispatch(setRacks(updatedRacks));
@@ -321,7 +321,7 @@ const RackGrid = ({ rack, onTankMove }) => {
       const token = getValidatedToken();
       if (!token) return;
       
-      const response = await axios.delete(`http://localhost:5000/api/tanks/${tankId}`, {
+      const response = await axios.delete(``${process.env.REACT_APP_API_BASE_URL}/tanks/${tankId}`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -331,7 +331,7 @@ const RackGrid = ({ rack, onTankMove }) => {
 
       // Refresh racks data after deletion
       const { data: updatedRacks } = await axios.get(
-        'http://localhost:5000/api/racks',
+        '`${process.env.REACT_APP_API_BASE_URL}/racks',
         {
           headers: {
             'Authorization': `Bearer ${token}`
@@ -393,7 +393,7 @@ const RackGrid = ({ rack, onTankMove }) => {
       
       console.log('Saving row configs for rack ID:', effectiveRack.id);
       const response = await axios.put(
-        `http://localhost:5000/api/racks/${effectiveRack.id}/row-config`,
+        ``${process.env.REACT_APP_API_BASE_URL}/racks/${effectiveRack.id}/row-config`,
         { row_configs: formattedConfigs },
         {
           headers: {
@@ -405,7 +405,7 @@ const RackGrid = ({ rack, onTankMove }) => {
       console.log('Backend row config response:', response.data);
       
       // Refresh racks after update
-      const { data: updatedRacks } = await axios.get('http://localhost:5000/api/racks', {
+      const { data: updatedRacks } = await axios.get('`${process.env.REACT_APP_API_BASE_URL}/racks', {
         headers: { Authorization: `Bearer ${token}` }
       });
       dispatch(setRacks(updatedRacks));

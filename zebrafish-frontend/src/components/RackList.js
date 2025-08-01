@@ -53,7 +53,7 @@ const RackList = () => {
         const token = localStorage.getItem('token');
         console.log("RackList: Fetching racks with token:", token ? "token present" : "no token");
         
-        const response = await axios.get('http://localhost:5000/api/racks', {
+        const response = await axios.get('${process.env.REACT_APP_API_BASE_URL}/racks', {
           headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -73,7 +73,7 @@ const RackList = () => {
   const handleTankMove = async (tankId, sourcePosition, destinationPosition) => {
     try {
       const token = localStorage.getItem('token');
-      await axios.put(`http://localhost:5000/api/tanks/${tankId}/position`, 
+      await axios.put(`${process.env.REACT_APP_API_BASE_URL}/tanks/${tankId}/position`, 
         { position: destinationPosition },
         {
           headers: {
@@ -83,7 +83,7 @@ const RackList = () => {
         }
       );
       // Refresh racks data after successful move
-      const response = await axios.get('http://localhost:5000/api/racks');
+      const response = await axios.get('${process.env.REACT_APP_API_BASE_URL}/racks');
       dispatch(setRacks(response.data));
     } catch (error) {
       console.error('Error moving tank:', error);
@@ -94,7 +94,7 @@ const RackList = () => {
     try {
       const token = localStorage.getItem('token');
       const response = await axios.post(
-        'http://localhost:5000/api/racks',
+        `${process.env.REACT_APP_API_BASE_URL}/racks`,
         rackData,
         {
           headers: {
@@ -105,7 +105,7 @@ const RackList = () => {
       );
 
       if (response.data && response.data.row_configs) {
-        const { data: updatedRacks } = await axios.get('http://localhost:5000/api/racks', {
+        const { data: updatedRacks } = await axios.get('${process.env.REACT_APP_API_BASE_URL}/racks', {
           headers: { Authorization: `Bearer ${token}` }
         });
         dispatch(setRacks(updatedRacks));
@@ -124,7 +124,7 @@ const RackList = () => {
 
     try {
       const token = localStorage.getItem('token');
-      await axios.delete(`http://localhost:5000/api/racks/${rackId}`, {
+      await axios.delete(`${process.env.REACT_APP_API_BASE_URL}/racks/${rackId}`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -132,7 +132,7 @@ const RackList = () => {
 
       // Refresh racks data after deletion
       const { data: updatedRacks } = await axios.get(
-        'http://localhost:5000/api/racks',
+        '${process.env.REACT_APP_API_BASE_URL}/racks',
         {
           headers: {
             'Authorization': `Bearer ${token}`
@@ -151,7 +151,7 @@ const RackList = () => {
       console.log('Search data:', searchData);
       
       const { data } = await axios.post(
-        'http://localhost:5000/api/search/tanks',
+        '${process.env.REACT_APP_API_BASE_URL}/search/tanks',
         searchData,
         {
           headers: {
@@ -188,7 +188,7 @@ const RackList = () => {
     try {
       const token = localStorage.getItem('token');
       const response = await axios.post(
-        'http://localhost:5000/api/tanks/color-mapping',
+        '${process.env.REACT_APP_API_BASE_URL}/tanks/color-mapping',
         mappingData,
         {
           headers: {
@@ -200,7 +200,7 @@ const RackList = () => {
       if (response.data) {
         // Refresh racks after color update
         const { data: updatedRacks } = await axios.get(
-          'http://localhost:5000/api/racks',
+          '${process.env.REACT_APP_API_BASE_URL}/racks',
           {
             headers: { Authorization: `Bearer ${token}` }
           }
@@ -215,11 +215,11 @@ const RackList = () => {
   const handleTankSave = async (updatedTank, tankData, config) => {
     if (!updatedTank.id) {
       // This is a new tank creation
-      await axios.post('http://localhost:5000/api/tanks', tankData, config);
+      await axios.post('${process.env.REACT_APP_API_BASE_URL}/tanks', tankData, config);
     } else {
       // This is an existing tank update
       await axios.put(
-        `http://localhost:5000/api/tanks/${updatedTank.id}`,
+        `${process.env.REACT_APP_API_BASE_URL}/tanks/${updatedTank.id}`,
         {
           ...updatedTank,
           size: updatedTank.size.toLowerCase(),

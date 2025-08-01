@@ -63,7 +63,7 @@ const CaseForm = ({ onSaved }) => {
     const fetchRacks = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await axios.get('http://localhost:5000/api/racks', {
+        const response = await axios.get('`${process.env.REACT_APP_API_BASE_URL}/racks', {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         setRacks(response.data);
@@ -100,7 +100,7 @@ const CaseForm = ({ onSaved }) => {
       };
       
       const token = localStorage.getItem('token');
-      await axios.post('http://localhost:5000/api/clinical/cases', formattedData, {
+      await axios.post('`${process.env.REACT_APP_API_BASE_URL}/clinical/cases', formattedData, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       

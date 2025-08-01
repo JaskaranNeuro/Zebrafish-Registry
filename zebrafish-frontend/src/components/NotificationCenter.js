@@ -20,7 +20,7 @@ const NotificationCenter = () => {
   const fetchNotifications = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get('http://localhost:5000/api/notifications', {
+      const response = await axios.get('`${process.env.REACT_APP_API_BASE_URL}/notifications', {
         headers: { 'Authorization': `Bearer ${token}` },
         params: { limit: 10 }
       });
@@ -68,7 +68,7 @@ const NotificationCenter = () => {
       try {
         const token = localStorage.getItem('token');
         await axios.post(
-          `http://localhost:5000/api/notifications/${notification.id}/read`,
+          ``${process.env.REACT_APP_API_BASE_URL}/notifications/${notification.id}/read`,
           {},
           { headers: { 'Authorization': `Bearer ${token}` } }
         );
@@ -97,7 +97,7 @@ const NotificationCenter = () => {
     try {
       const token = localStorage.getItem('token');
       await axios.post(
-        'http://localhost:5000/api/notifications/read-all',
+        '`${process.env.REACT_APP_API_BASE_URL}/notifications/read-all',
         {},
         { headers: { 'Authorization': `Bearer ${token}` } }
       );

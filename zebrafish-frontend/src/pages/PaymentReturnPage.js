@@ -24,7 +24,7 @@ const PaymentReturnPage = ({ onLogout }) => {
         // Verify the payment with your backend
         const token = localStorage.getItem('token');
         const response = await axios.post(
-          'http://localhost:5000/api/subscription/payment/verify', 
+          '`${process.env.REACT_APP_API_BASE_URL}/subscription/payment/verify', 
           {
             payment_intent_id: pendingPaymentData.payment_intent_id,
             plan: pendingPaymentData.plan,
