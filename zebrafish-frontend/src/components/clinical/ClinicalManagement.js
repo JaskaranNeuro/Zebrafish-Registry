@@ -22,8 +22,18 @@ const ClinicalManagement = () => {
       });
       setCases(response.data);
     } catch (err) {
-      setError('Failed to fetch clinical cases');
       console.error('Error fetching cases:', err);
+      
+      // Check for authentication errors - let global interceptor handle 422 errors
+      if (err.response?.status === 422 && 
+          (err.response?.data?.message === 'Signature verification failed' ||
+           err.response?.data?.message?.includes('signature'))) {
+        console.log('🔧 DEBUG: Token expired in ClinicalManagement, letting global interceptor handle it');
+        // Global interceptor will handle this
+        return;
+      }
+      
+      setError('Failed to fetch clinical cases');
     } finally {
       setLoading(false);
     }

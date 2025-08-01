@@ -27,24 +27,31 @@ axios.interceptors.response.use(
   response => response,
   error => {
     // Prevent infinite loops by checking if we're already on the login page
-    const isLoginPage = window.location.href.includes('/login');
+    const isLoginPage = window.location.pathname === '/' || window.location.pathname === '/login';
     
     if (
       error.response && 
       (error.response.status === 401 || 
        error.response.status === 403 || 
-       error.response.status === 422) && 
+       (error.response.status === 422 && 
+        (error.response.data?.message === 'Signature verification failed' ||
+         error.response.data?.message?.includes('signature')||
+         error.response.data?.message?.includes('token')))) && 
       !isLoginPage  // Only redirect if not already on login page
     ) {
-      console.error('Authentication error:', error.response.data);
-      // Clear token
+      console.error('🔧 DEBUG: Authentication error detected, clearing session:', error.response.data);
+      
+      // Clear all auth-related storage
       localStorage.removeItem('token');
       localStorage.removeItem('activeTab');
       localStorage.removeItem('userRole');
+      localStorage.removeItem('pendingPaymentData');
       
-      // Use replace state instead of location.href to prevent loops
-      window.history.replaceState(null, '', '/login');
-      window.location.reload();
+      // Show user-friendly message
+      alert('Your session has expired. Please log in again.');
+      
+      // Redirect to login page
+      window.location.href = '/';
     }
     return Promise.reject(error);
   }

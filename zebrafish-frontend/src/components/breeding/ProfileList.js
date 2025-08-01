@@ -59,6 +59,16 @@ const ProfileList = ({ onSelectProfile }) => {
         dispatch(setProfiles(response.data));
       } catch (err) {
         console.error('Error fetching profiles:', err);
+        
+        // Check for authentication errors
+        if (err.response?.status === 422 && 
+            (err.response?.data?.message === 'Signature verification failed' ||
+             err.response?.data?.message?.includes('signature'))) {
+          console.log('🔧 DEBUG: Token expired in ProfileList, letting global interceptor handle it');
+          // Global interceptor will handle this
+          return;
+        }
+        
         dispatch(setError(err.response?.data?.message || 'Failed to fetch profiles'));
       } finally {
         dispatch(setLoading(false));

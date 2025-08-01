@@ -41,7 +41,17 @@ const NotificationCenter = () => {
       }
     } catch (err) {
       console.error('Error fetching notifications:', err);
-      // Set default values on error
+      
+      // Check for authentication errors - let global interceptor handle 422 errors
+      if (err.response?.status === 422 && 
+          (err.response?.data?.message === 'Signature verification failed' ||
+           err.response?.data?.message?.includes('signature'))) {
+        console.log('🔧 DEBUG: Token expired in NotificationCenter, letting global interceptor handle it');
+        // Global interceptor will handle this
+        return;
+      }
+      
+      // Set default values on other errors
       setNotifications([]);
       setUnreadCount(0);
     }
