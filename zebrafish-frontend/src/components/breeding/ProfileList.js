@@ -56,7 +56,7 @@ const ProfileList = ({ onSelectProfile }) => {
   const handleDeleteProfile = async (profileId) => {
     try {
       const token = localStorage.getItem('token');
-      await axios.delete(``${process.env.REACT_APP_API_BASE_URL}/breeding/profiles/${profileId}`, {
+      await axios.delete(`${process.env.REACT_APP_API_BASE_URL}/breeding/profiles/${profileId}`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       dispatch(setProfiles(profiles.filter(p => p.id !== profileId)));
@@ -79,7 +79,7 @@ const ProfileList = ({ onSelectProfile }) => {
     try {
       const token = localStorage.getItem('token');
       await axios.put(
-        ``${process.env.REACT_APP_API_BASE_URL}/breeding/profiles/${profileToEdit.id}`,
+        `${process.env.REACT_APP_API_BASE_URL}/breeding/profiles/${profileToEdit.id}`,
         { name: editedName },
         {
           headers: { 'Authorization': `Bearer ${token}` }

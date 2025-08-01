@@ -110,7 +110,7 @@ const BreedingCalendar = () => {
       const formattedEndDate = endDate.toISOString().split('T')[0];
       
       const response = await axios.get(
-        ``${process.env.REACT_APP_API_BASE_URL}/breeding/calendar/${formattedStartDate}`,
+        `${process.env.REACT_APP_API_BASE_URL}/breeding/calendar/${formattedStartDate}`,
         { 
           headers: { 'Authorization': `Bearer ${token}` },
           params: { end_date: formattedEndDate }
@@ -208,7 +208,7 @@ const BreedingCalendar = () => {
     try {
       const token = localStorage.getItem('token');
       const response = await axios.get(
-        ``${process.env.REACT_APP_API_BASE_URL}/breeding/calendar/history`,
+        `${process.env.REACT_APP_API_BASE_URL}/breeding/calendar/history`,
         { 
           headers: { 'Authorization': `Bearer ${token}` },
           params: { start_date: historyStartDate, end_date: historyEndDate }
@@ -235,7 +235,7 @@ const BreedingCalendar = () => {
       setLoading(true);
       const token = localStorage.getItem('token');
       await axios.delete(
-        ``${process.env.REACT_APP_API_BASE_URL}/breeding/calendar/request/${requestId}`,
+        `${process.env.REACT_APP_API_BASE_URL}/breeding/calendar/request/${requestId}`,
         { headers: { 'Authorization': `Bearer ${token}` } }
       );
       

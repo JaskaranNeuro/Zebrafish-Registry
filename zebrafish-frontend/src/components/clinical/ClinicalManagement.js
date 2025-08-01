@@ -52,7 +52,7 @@ const ClinicalManagement = () => {
       const token = localStorage.getItem('token');
       
       // Fetch complete case details with notes
-      const response = await axios.get(``${process.env.REACT_APP_API_BASE_URL}/clinical/cases/${caseId}`, {
+      const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/clinical/cases/${caseId}`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       

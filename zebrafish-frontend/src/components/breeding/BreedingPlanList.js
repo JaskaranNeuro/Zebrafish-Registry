@@ -66,7 +66,7 @@ const BreedingPlanList = ({ profile, onBack }) => {
     try {
       const token = localStorage.getItem('token');
       const response = await axios.get(
-        ``${process.env.REACT_APP_API_BASE_URL}/breeding/plans?profile_id=${profileId}`,
+        `${process.env.REACT_APP_API_BASE_URL}/breeding/plans?profile_id=${profileId}`,
         {
           headers: {
             'Authorization': `Bearer ${token}`
@@ -110,7 +110,7 @@ const BreedingPlanList = ({ profile, onBack }) => {
 
     try {
       const token = localStorage.getItem('token');
-      await axios.delete(``${process.env.REACT_APP_API_BASE_URL}/breeding/plans/${planId}`, {
+      await axios.delete(`${process.env.REACT_APP_API_BASE_URL}/breeding/plans/${planId}`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       // Update the local state to remove the deleted plan
@@ -146,7 +146,7 @@ const BreedingPlanList = ({ profile, onBack }) => {
     try {
       const token = localStorage.getItem('token');
       await axios.put(
-        ``${process.env.REACT_APP_API_BASE_URL}/breeding/plans/${planToEdit.id}`,
+        `${process.env.REACT_APP_API_BASE_URL}/breeding/plans/${planToEdit.id}`,
         planData,
         {
           headers: { 'Authorization': `Bearer ${token}` }
@@ -169,7 +169,7 @@ const BreedingPlanList = ({ profile, onBack }) => {
       // Fetch fresh plan data to ensure we have latest breeding results
       const token = localStorage.getItem('token');
       axios.get(
-        ``${process.env.REACT_APP_API_BASE_URL}/breeding/plans/${plan.id}`, 
+        `${process.env.REACT_APP_API_BASE_URL}/breeding/plans/${plan.id}`, 
         { headers: { 'Authorization': `Bearer ${token}` } }
       ).then(response => {
         setSelectedPlan(response.data);  // Use the fresh data
@@ -622,7 +622,7 @@ const BreedingPlanList = ({ profile, onBack }) => {
                             // Call API to update just this cross
                             const token = localStorage.getItem('token');
                             axios.patch(
-                              ``${process.env.REACT_APP_API_BASE_URL}/breeding/crosses/${cross.id}`, 
+                              `${process.env.REACT_APP_API_BASE_URL}/breeding/crosses/${cross.id}`, 
                               { breedingResult: breedingResult },
                               { headers: { 'Authorization': `Bearer ${token}` } }
                             ).then(() => {

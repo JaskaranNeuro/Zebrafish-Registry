@@ -31,7 +31,7 @@ const CaseDetail = ({ caseData, onBack, onCaseUpdated }) => {
       const token = localStorage.getItem('token');
       
       const response = await axios.get(
-        ``${process.env.REACT_APP_API_BASE_URL}/clinical/cases/${caseData.id}`,
+        `${process.env.REACT_APP_API_BASE_URL}/clinical/cases/${caseData.id}`,
         { headers: { 'Authorization': `Bearer ${token}` } }
       );
       
@@ -60,7 +60,7 @@ const CaseDetail = ({ caseData, onBack, onCaseUpdated }) => {
       };
       
       await axios.patch(
-        ``${process.env.REACT_APP_API_BASE_URL}/clinical/cases/${caseData.id}/status`, 
+        `${process.env.REACT_APP_API_BASE_URL}/clinical/cases/${caseData.id}/status`, 
         data,
         { headers: { 'Authorization': `Bearer ${token}` } }
       );
@@ -83,7 +83,7 @@ const CaseDetail = ({ caseData, onBack, onCaseUpdated }) => {
       const token = localStorage.getItem('token');
       
       await axios.post(
-        ``${process.env.REACT_APP_API_BASE_URL}/clinical/cases/${caseData.id}/notes`,
+        `${process.env.REACT_APP_API_BASE_URL}/clinical/cases/${caseData.id}/notes`,
         { content: newNote.trim() },
         { headers: { 'Authorization': `Bearer ${token}` } }
       );
@@ -113,7 +113,7 @@ const CaseDetail = ({ caseData, onBack, onCaseUpdated }) => {
         const token = localStorage.getItem('token');
         
         await axios.delete(
-          ``${process.env.REACT_APP_API_BASE_URL}/clinical/cases/${caseData.id}`, 
+          `${process.env.REACT_APP_API_BASE_URL}/clinical/cases/${caseData.id}`, 
           { headers: { 'Authorization': `Bearer ${token}` } }
         );
         

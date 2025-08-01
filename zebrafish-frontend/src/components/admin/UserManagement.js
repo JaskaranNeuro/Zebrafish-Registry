@@ -39,7 +39,7 @@ const UserManagement = () => {
     try {
       console.log(`Updating user ${userId} role to: ${newRole}`);
       const token = localStorage.getItem('token');
-      const response = await axios.put(``${process.env.REACT_APP_API_BASE_URL}/admin/users/${userId}/role`, 
+      const response = await axios.put(`${process.env.REACT_APP_API_BASE_URL}/admin/users/${userId}/role`, 
         { role: newRole },
         { headers: { 'Authorization': `Bearer ${token}` }}
       );
@@ -80,7 +80,7 @@ const UserManagement = () => {
     
     try {
       const token = localStorage.getItem('token');
-      await axios.delete(``${process.env.REACT_APP_API_BASE_URL}/admin/users/${userId}`, {
+      await axios.delete(`${process.env.REACT_APP_API_BASE_URL}/admin/users/${userId}`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       

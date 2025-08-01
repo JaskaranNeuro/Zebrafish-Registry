@@ -28,7 +28,7 @@ const SubscriptionAlert = () => {
   const checkSubscription = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get('`${process.env.REACT_APP_API_BASE_URL}/subscription/status', {
+      const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/subscription/status`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       
