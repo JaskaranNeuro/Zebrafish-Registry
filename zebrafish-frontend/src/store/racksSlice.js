@@ -9,7 +9,22 @@ const racksSlice = createSlice({
   },
   reducers: {
     setRacks: (state, action) => {
-      state.items = action.payload;
+      // Validate payload to prevent HTML or invalid data
+      const payload = action.payload;
+      
+      if (typeof payload === 'string' && payload.includes('<!doctype html>')) {
+        console.error("Redux setRacks: Prevented HTML from being stored in state");
+        state.items = [];
+        return;
+      }
+      
+      if (!Array.isArray(payload)) {
+        console.error("Redux setRacks: Payload is not an array:", typeof payload);
+        state.items = [];
+        return;
+      }
+      
+      state.items = payload;
     },
     setLoading: (state, action) => {
       state.loading = action.payload;
