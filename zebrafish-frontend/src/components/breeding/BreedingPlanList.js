@@ -158,6 +158,17 @@ const BreedingPlanList = ({ profile, onBack }) => {
       console.error('🔧 DEBUG: Error response:', error.response?.data);
       console.error('🔧 DEBUG: Error status:', error.response?.status);
       
+      // Check for authentication errors
+      if (error.response?.status === 422 && error.response?.data?.message === 'Signature verification failed') {
+        alert('Your session has expired. Please log in again.');
+        // Clear the invalid token
+        localStorage.removeItem('token');
+        localStorage.removeItem('userRole');
+        // Redirect to login
+        window.location.href = '/';
+        return;
+      }
+      
       // Show user-friendly error message
       if (error.response?.data?.message) {
         alert(`Failed to create breeding plan: ${error.response.data.message}`);
