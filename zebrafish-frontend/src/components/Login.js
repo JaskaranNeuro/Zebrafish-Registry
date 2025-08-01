@@ -104,7 +104,7 @@ const Login = ({ onLoginSuccess }) => {
       };
       
       console.log('Creating new facility with:', dataToSend);
-      const response = await axios.post('http://localhost:5000/api/register-facility', dataToSend);
+      const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/register-facility`, dataToSend);
       
       console.log('New facility response:', response.data);
       setSignupSuccess('New facility created successfully! You can now log in as the admin.');
